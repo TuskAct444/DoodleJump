@@ -3,20 +3,22 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.geom.AffineTransform;
+import java.awt.image.ImageObserver;
 import java.net.URL;
 
-public class Background {
+public class Background{
 	private Image forward; 	
 	private AffineTransform tx;
 	
+	int dir = 0; 
 	int width, height;
 	int x, y;						//position of the object
 	int vx, vy;						//movement variables
-	double scaleWidth = 4.0;		//change to scale image
-	double scaleHeight = 4.0; 		//change to scale image
+	double scaleWidth = 2.0;		//change to scale image
+	double scaleHeight = 2.0; 		//change to scale image
 	
 	public Background() {
-		forward		= getImage("Clouds.jpg");
+		forward		= getImage("/imgs/"+"sky.png");
 		
 		
 		
@@ -32,9 +34,8 @@ public class Background {
 		y = 0;
 		
 		vx = 0;
-		vy = 0 ;
-		
-		
+		vy = 0;
+				
 		tx = AffineTransform.getTranslateInstance(0, 0);
 
 		init(x, y); 				//initialize the location of the image

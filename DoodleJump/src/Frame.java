@@ -1,6 +1,7 @@
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -8,14 +9,20 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.Timer;
 
 public class Frame extends JPanel implements ActionListener, MouseListener, KeyListener{
 	
 	// resolution of the frame	
 	static int width 		= 600;
 	static int height		= 900;
+	int level = 0;
+	int score = 0;
+	Timer t = new Timer(16, this);
+	Background b = new Background(0, 0);
 	
 	public Frame() {
 		
@@ -23,14 +30,21 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		frame.setSize(new Dimension(width, height));
 		
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.add(this);
 		frame.setUndecorated(false);
-		frame.setResizable(false);
-		frame.setTitle("Doodle Jump");
+		frame.setResizable(true);
 		frame.addKeyListener(this);
 		
 		frame.setLocationRelativeTo(null);
+		t.start();
 		frame.setVisible(true);
 		
+	}
+	
+	public void paint(Graphics g) {
+		super.paintComponent(g);
+		
+		b.paint(g);
 	}
 
 	@Override
@@ -84,7 +98,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-		
+		repaint();
 	}		
 	
 	public static void main(String[] args) {
