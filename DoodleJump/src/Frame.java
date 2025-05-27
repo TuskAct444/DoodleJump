@@ -40,7 +40,6 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	    
 	    Platform platform = new Platform(200, 600);
 	    
-	    Platform platform = new Platform(200, 600);
 
 
 	}
@@ -95,9 +94,9 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-	    if (Platform.collidesWith(doodleCharacter) || MovingPlatform.collidesWith(doodleCharacter)) {
-	        doodleCharacter.vy = -15;
-	    }
+//	    if (Platform.collidesWith(doodleCharacter) || MovingPlatform.collidesWith(doodleCharacter)) {
+//	        doodleCharacter.vy = -15;
+//	    }
 	    repaint();
 	}
 		// TODO Auto-generated method stub
