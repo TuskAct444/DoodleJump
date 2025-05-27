@@ -31,6 +31,9 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 		
+		
+	    Background background = new Background(0, 0);
+
 	}
 
 	@Override
