@@ -34,6 +34,18 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		
 	    Background background = new Background(0, 0);
 
+	    MovingPlatform movingPlatform = new MovingPlatform(100, 500, 3);
+
+	    doodleCharacter doodleCharacter = new doodleCharacter();
+	    
+	    public void paint(Graphics g) {
+	        super.paintComponent(g);
+	        b.paint(g);
+	        Platform.paint(g);
+	        MovingPlatform.paint(g);
+	        doodleCharacter.paint(g);
+	    }
+
 	}
 
 	@Override
@@ -86,9 +98,14 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+	    if (Platform.collidesWith(doodleCharacter) || MovingPlatform.collidesWith(doodleCharacter)) {
+	        doodleCharacter.vy = -15;
+	    }
+	    repaint();
+	}
 		// TODO Auto-generated method stub
 		
-	}		
+	
 	
 	public static void main(String[] args) {
 		
