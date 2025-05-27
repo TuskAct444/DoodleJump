@@ -38,13 +38,10 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 
 	    doodleCharacter doodleCharacter = new doodleCharacter();
 	    
-	    public void paint(Graphics g) {
-	        super.paintComponent(g);
-	        b.paint(g);
-	        Platform.paint(g);
-	        MovingPlatform.paint(g);
-	        doodleCharacter.paint(g);
-	    }
+	    Platform platform = new Platform(200, 600);
+	    
+	    Platform platform = new Platform(200, 600);
+
 
 	}
 
