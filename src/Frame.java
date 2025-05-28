@@ -48,7 +48,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 		
-		Timer t = new Timer(16, this);
+		Timer t = new Timer(4, this);
 		t.start();
      
 	    
@@ -59,9 +59,11 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	public void paint(Graphics g) {
 		super.paintComponent(g);
 		
+		b.paint(g);
+
+		
 		mP.paint(g);
 		p.paint(g);
-		b.paint(g);
 		
 		d.paint(g);
 		

@@ -2,6 +2,12 @@
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Rectangle;
+import java.awt.Toolkit;
+import java.awt.geom.AffineTransform;
+import java.net.URL;
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.geom.AffineTransform;
 import java.net.URL;
@@ -12,8 +18,8 @@ public class Platform {
 
     int x, y;
     int width, height;
-    double scaleWidth = 0.3;
-    double scaleHeight = 0.3;
+    double scaleWidth = 1.5;
+    double scaleHeight = 1.3;
 
     public Platform(int x, int y) {
         this.x = x;
@@ -21,8 +27,8 @@ public class Platform {
 
         img = getImage("/imgs/" + "plankSafe.png");
 
-        width = 100;
-        height = 100;
+        width = 300;
+        height = 300;
 
         tx = AffineTransform.getTranslateInstance(x, y);
         tx.scale(scaleWidth, scaleHeight);
@@ -50,15 +56,30 @@ public class Platform {
         return tempImage;
     }
 
-    public boolean collidesWith(MC mc) {
-        int mcX = mc.x;
-        int mcY = mc.y;
-        int mcWidth = 50;
-        int mcHeight = 50;
+    public boolean collided(MC mc) {
+		
+ 		// represents each object as a rectangle
+ 		
+ 		Rectangle rectTemp = new Rectangle(
+ 				
+ 				mc.getX(),
+ 				mc.getY(),
+ 				mc.getWidth(),
+ 				mc.getHeight()
+ 				
+ 				);
+ 		
+ 		// represent object queried for info as a rectangle
+ 		Rectangle rowHitbox = new Rectangle(
+ 				
+ 				this.x,
+ 				this.y,
+ 				this.width,
+ 				this.height
 
-        return (mcX + mcWidth > x && mcX < x + width &&
-                mcY + mcHeight > y && mcY + mcHeight < y + height + 10);
-    }
-}
-			
-
+ 				);
+ 		
+ 		return rectTemp.intersects(rowHitbox);
+ 		
+ 	}
+ }
