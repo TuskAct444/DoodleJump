@@ -16,13 +16,12 @@ public class Background {
 	double scaleHeight = 4.0; 		//change to scale image
 	
 	public Background() {
-		forward		= getImage("moon-map-pixilart.png");
+		forward		= getImage("/imgs/" + "Clouds.jpg");
 		
 		
 		
 		width = 0;
 		height = 0;
-		
 		
 		
 		x = Frame.width/2 - width/2;

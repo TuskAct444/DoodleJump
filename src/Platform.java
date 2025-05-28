@@ -2,6 +2,7 @@
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.geom.AffineTransform;
 import java.net.URL;
@@ -19,7 +20,7 @@ public class Platform {
         this.x = x;
         this.y = y;
 
-        img = getImage("/imgs/platform.png");
+        img = getImage("/imgs/" + "platform.png");
 
         width = 100;
         height = 20;
@@ -50,15 +51,32 @@ public class Platform {
         return tempImage;
     }
 
-    public boolean collidesWith(doodleCharacter mc) {
-        int mcX = mc.x;
-        int mcY = mc.y;
-        int mcWidth = 50;
-        int mcHeight = 50;
+    public boolean collided(MC mc) {
+		
+		// represents each object as a rectangle
+		
+		Rectangle rectTemp = new Rectangle(
+				
+				mc.getX(),
+				mc.getY(),
+				mc.getWidth(),
+				mc.getHeight()
+				
+				);
+		
+		// represent object queried for info as a rectangle
+		Rectangle rowHitbox = new Rectangle(
+				
+				this.x,
+				this.y,
+				this.width,
+				this.height
 
-        return (mcX + mcWidth > x && mcX < x + width &&
-                mcY + mcHeight > y && mcY + mcHeight < y + height + 10);
-    }
+				);
+		
+		return rectTemp.intersects(rowHitbox);
+		
+	}
 }
 			
 
