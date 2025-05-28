@@ -20,10 +20,10 @@ public class MovingPlatform {
         this.y = y;
         this.vx = speed;
 
-        img = getImage("/imgs/platform.png");
+        img = getImage("/imgs/" + "platSpeed.png");
 
         width = 100;
-        height = 20;
+        height = 100;
 
         tx = AffineTransform.getTranslateInstance(x, y);
         tx.scale(scaleWidth, scaleHeight);
@@ -59,7 +59,7 @@ public class MovingPlatform {
         return tempImage;
     }
 
-    public boolean collidesWith(doodleCharacter mc) {
+    public boolean collidesWith(MC mc) {
         int mcX = mc.x;
         int mcY = mc.y;
         int mcWidth = 50;

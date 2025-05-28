@@ -3,38 +3,41 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.geom.AffineTransform;
+import java.awt.image.ImageObserver;
 import java.net.URL;
 
-public class Background {
+public class Background{
 	private Image forward; 	
 	private AffineTransform tx;
 	
+	int dir = 0; 
 	int width, height;
 	int x, y;						//position of the object
 	int vx, vy;						//movement variables
-	double scaleWidth = 4.0;		//change to scale image
-	double scaleHeight = 4.0; 		//change to scale image
+	double scaleWidth = 5.0;		//change to scale image
+	double scaleHeight = 5.0; 		//change to scale image
 	
 	public Background() {
-		forward		= getImage("moon-map-pixilart.png");
+		forward		= getImage("/imgs/" + "moonMap.png");
+
+
 		
 		
 		
-		width = 0;
-		height = 0;
+		width = 100;
+		height = 100;
 		
 		
 		
 		x = Frame.width/2 - width/2;
 		y = Frame.height - height*2;
 		
-		x = 0;
-		y = 0;
+		x = 500;
+		y = 500;
 		
 		vx = 0;
-		vy = 0 ;
-		
-		
+		vy = 0;
+				
 		tx = AffineTransform.getTranslateInstance(0, 0);
 
 		init(x, y); 				//initialize the location of the image
