@@ -15,6 +15,9 @@ public class MC{
 	double vx;
 	double vy;						//movement variables
 	double grav;					//gravity :)
+	double accel;
+	double currSpeed, speedX;
+	double maxS;
 	double scaleWidth = 0.3;		//change to scale image
 	double scaleHeight = 0.3; 		//change to scale image
 	//Constructor (default)
@@ -31,9 +34,10 @@ public class MC{
 		y = 0;
 		
 		vx = 0.0;
-		vy = 0;
+		vy = 0.0;
 		
 		grav = 0.35;
+		accel = 0.3;
 		
 		tx = AffineTransform.getTranslateInstance(0, 0);
 		
@@ -100,6 +104,37 @@ public class MC{
 		
 	}
 	
+	public void move(int dir) {
+		if(dir == 0) {
+			vx -= accel;
+		} else if(dir == 1) {
+			vx += accel;
+		}
+	}
+	
+	public void decel() {
+		if(vx < 0) {
+			vx += accel;
+			if(vx > 0) {
+				vx = 0;
+			}
+		} else if(vx > 0) {
+			vx -= accel;
+			if(vx < 0) {
+				vx = 0;
+			}
+		}
+	}
+	
+	public void updateVy() {
+		vy += grav;
+		y += vy;
+	}
+	
+	public void updateVx() {
+		x += vx;
+	}
+	
 	// Basic getters and setters
 	
 	public int getWidth() {
@@ -148,12 +183,6 @@ public class MC{
 
 	public void setVy(double vy) {
 		this.vy = vy;
-	}
-	
-	public void update() {
-		vy += grav;
-		
-		y += vy;
 	}
 
 	private void init(int a, int b) {

@@ -23,6 +23,8 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	Font timeFont = new Font("Courier", Font.BOLD, 70);
 	int level = 0;
 	int gravity = 1;
+	boolean left = false;
+	boolean right = false;
 	
 	
 	// resolution of the frame	
@@ -54,7 +56,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 	    
-	    Timer t = new Timer(16, this);
+	    Timer t = new Timer(8, this);
 		t.start(); 	
 		
 	}
@@ -68,11 +70,20 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		mP.paint(g);
 		// Character
 		d.paint(g);
-		d.update();
+		d.updateVy();
 		
 		if(d.getY()>800) {
 			d.setVy(-10);
 		}
+		
+		if(d.getX()<-100) {
+			d.setX(700);
+		}
+		
+		if(d.getX()>700) {
+			d.setX(-50);
+		}
+		
 		// Platform
 		p.paint(g);
 		
@@ -86,14 +97,20 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
+		if(e.getKeyCode()==65) {
+			left = true;
+		} else if(e.getKeyCode()==68) {
+			right = true;
+		}
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
+		if(e.getKeyCode()==65) {
+			left = false;
+		} else if(e.getKeyCode()==68) {
+			right = false;
+		}
 	}
 
 	@Override
@@ -128,9 +145,15 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-//	    if (Platform.collidesWith(doodleCharacter) || MovingPlatform.collidesWith(doodleCharacter)) {
-//	        doodleCharacter.vy = -15;
-//	    }
+		if(left && !right) {
+			d.move(0);
+		} else if(!left && right) {
+			d.move(1);
+		} else {
+			d.decel();
+		}
+		
+		d.updateVx();
 	    repaint();
 	}
 		// TODO Auto-generated method stub
