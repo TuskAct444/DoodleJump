@@ -18,8 +18,8 @@ public class Platform {
 
     int x, y;
     int width, height;
-    double scaleWidth = 1.5;
-    double scaleHeight = 1.3;
+    double scaleWidth = 1.8;
+    double scaleHeight = 1.5;
 
     public Platform(int x, int y) {
         this.x = x;

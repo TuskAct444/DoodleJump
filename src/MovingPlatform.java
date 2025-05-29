@@ -17,8 +17,8 @@ public class MovingPlatform {
     int x, y;
     int vx;
     int width, height;
-    double scaleWidth = 1.5;
-    double scaleHeight = 1.3;
+    double scaleWidth = 1.8;
+    double scaleHeight = 1.5;
 
     public MovingPlatform(int x, int y, int speed) {
         this.x = x;

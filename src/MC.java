@@ -1,6 +1,7 @@
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.geom.AffineTransform;
 import java.awt.image.ImageObserver;
@@ -15,13 +16,14 @@ public class MC{
 	int x, y;						//position of the object
 	int vx, vy;						//movement variables
 	int ay;
-	double scaleWidth = 0.5;		//change to scale image
-	double scaleHeight = 0.5; 	
+	double scaleWidth = 0.3;		//change to scale image
+	double scaleHeight = 0.3; 	
 	int speedX = 0;
     int moveSpeed = 5;
     int currentSpeed = 0;
     int maxSpeed = 10;
     int Acceleration = 1;
+    double grav;
 
 	//change to scale image
 	
@@ -30,8 +32,8 @@ public class MC{
 		
 		
 		
-		width = 100;
-		height = 100;
+		width = 50;
+		height = 50;
 		
 		
 		
@@ -45,7 +47,10 @@ public class MC{
 		vy = 0 ;
 		
 		ay = 1+vy;
-				
+		
+		grav = 0.35;
+
+		
 		tx = AffineTransform.getTranslateInstance(0, 0);
 
 		init(x, y); 				//initialize the location of the image
@@ -101,6 +106,18 @@ public class MC{
 	
 	public void update() {
 	    x += speedX;
+	    vx += 0.5; // gravity force
+	    y += vx;
+
+	    x += speedX;
+	    if (x > Frame.width) {
+	        x = -50; // Appears on the left
+	    } else if (x < -50) {
+	        x = Frame.width; // Appears on the right
+	    }
+	    vy += 1; // gravity force
+	    y += vy;
+
 	}
 
 	
@@ -121,7 +138,32 @@ public class MC{
 		g2.drawImage(forward, tx, null);
 
 	}
-	
+	public boolean collided(MC mc) {
+		
+		// represents each object as a rectangle
+		
+		Rectangle rectTemp = new Rectangle(
+				
+				mc.getX(),
+				mc.getY(),
+				mc.getWidth(),
+				mc.getHeight()
+				
+				);
+		
+		// represent object queried for info as a rectangle
+		Rectangle rowHitbox = new Rectangle(
+				
+				this.x,
+				this.y,
+				this.width,
+				this.height
+
+				);
+		
+		return rectTemp.intersects(rowHitbox);
+		
+	}
 	public void setCoord() {
 		
 		
@@ -188,7 +230,16 @@ public class MC{
 		this.vy = vy;
 	}
 
+	public void update1() {
+		vy += grav;
+		
+		y += vy;
+	}
 
+	private void init(int a, int b) {
+		tx.setToTranslation(a, b);
+		tx.scale(scaleWidth, scaleHeight);
+	}
 	private Image getImage(String path) {
 		Image tempImage = null;
 		try {

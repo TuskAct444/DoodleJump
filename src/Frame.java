@@ -23,9 +23,11 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	// resolution of the frame	
 
     MovingPlatform mP = new MovingPlatform(100, 300, 3);
-    MC d = new MC(230 , 750);
+    MC d = new MC(230 , 150);
     Platform p = new Platform(200, 600);
+
     Background b = new Background(0, 0);
+	int gravity = 5;
 
     static int width 		= 600;
 	static int height		= 900;
@@ -65,8 +67,14 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		mP.paint(g);
 		p.paint(g);
 		
-		d.paint(g);
 		
+		
+		
+		
+		d.paint(g);
+		if(d.getY()>800) {
+			d.setVy(-27);
+		}
 		
 	}
 
@@ -145,6 +153,14 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		    }
 
 		    d.update(); 
+		    if (p.collided(d) && d.getVy() >= 0) {
+		        d.setY(p.y - d.getHeight()); // stick to platform
+		        d.setVy(-27); // bounce
+		    } else if (mP.collidesWith(d) && d.getVy() >= 0) {
+		        d.setY(mP.y - d.getHeight());
+		        d.setVy(-27); // bounce
+		    }
+
 		    repaint();
 		}
 		// TODO Auto-generated method stub
