@@ -16,8 +16,8 @@ public class MC{
 	double vy;						//movement variables
 	double grav;					//gravity :)
 	double accel;
-	double currSpeed, speedX;
 	double maxS;
+	int col;
 	double scaleWidth = 0.3;		//change to scale image
 	double scaleHeight = 0.3; 		//change to scale image
 	//Constructor (default)
@@ -38,6 +38,8 @@ public class MC{
 		
 		grav = 0.35;
 		accel = 0.3;
+		
+		maxS = 6;
 		
 		tx = AffineTransform.getTranslateInstance(0, 0);
 		
@@ -77,7 +79,7 @@ public class MC{
 	
 	// Create a hitbox that will determine whether or not
 	// the MC hits something
-	public boolean collided(MC mc) {
+	public boolean collide(MC mc) {
 		
 		// represents each object as a rectangle
 		
@@ -106,20 +108,24 @@ public class MC{
 	
 	public void move(int dir) {
 		if(dir == 0) {
-			vx -= accel;
+			if(vx > -maxS) {
+				vx -= accel;
+			}
 		} else if(dir == 1) {
-			vx += accel;
+			if(vx < maxS) {
+				vx += accel;
+			}
 		}
 	}
 	
 	public void decel() {
 		if(vx < 0) {
-			vx += accel;
+			vx += accel/2;
 			if(vx > 0) {
 				vx = 0;
 			}
 		} else if(vx > 0) {
-			vx -= accel;
+			vx -= accel/2;
 			if(vx < 0) {
 				vx = 0;
 			}
@@ -127,12 +133,23 @@ public class MC{
 	}
 	
 	public void updateVy() {
+		// col == 0 = fail
+		if(this.y>800) {
+			setVy(-7.5);
+		}
 		vy += grav;
 		y += vy;
 	}
 	
-	public void updateVx() {
-		x += vx;
+	public void updateVx() {		
+		if(this.x<-100) {
+			setX(700);
+		}
+		
+		if(this.x>700) {
+			setX(-50);
+		}
+		x += 	vx;
 	}
 	
 	// Basic getters and setters
@@ -183,6 +200,14 @@ public class MC{
 
 	public void setVy(double vy) {
 		this.vy = vy;
+	}
+
+	public int getCol() {
+		return col;
+	}
+
+	public void incCol(int col) {
+		this.col += col;
 	}
 
 	private void init(int a, int b) {

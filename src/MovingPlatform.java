@@ -11,7 +11,7 @@ public class MovingPlatform {
     private AffineTransform tx;
 
     int x, y;
-    int vx;
+    double vx;
     int width, height;
     double scaleWidth = 0.3;
     double scaleHeight = 0.3;
@@ -25,6 +25,7 @@ public class MovingPlatform {
 
         width = 140;
         height = 20;
+
 
         tx = AffineTransform.getTranslateInstance(x, y);
         tx.scale(scaleWidth, scaleHeight);
@@ -86,6 +87,47 @@ public class MovingPlatform {
 		return rectTemp.intersects(rowHitbox);
 		
 	}
+    
+    public int getWidth() {
+		return width;
+	}
+
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
+	public int getHeight() {
+		return height;
+	}
+
+	public void setHeight(int height) {
+		this.height = height;
+	}
+
+	public int getX() {
+		return x;
+	}
+
+	public void setX(int x) {
+		this.x = x;
+	}
+
+	public int getY() {
+		return y;
+	}
+
+	public void setY(int y) {
+		this.y = y;
+	}
+
+	public double getVx() {
+		return vx;
+	}
+
+	public void setVx(double vx) {
+		this.vx = vx;
+	}
+
 }
 
 

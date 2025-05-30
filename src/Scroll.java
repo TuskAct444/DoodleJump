@@ -7,26 +7,23 @@ import java.awt.Toolkit;
 import java.awt.geom.AffineTransform;
 import java.net.URL;
 
-public class Platform {
+public class Scroll {
     private Image img;
     private AffineTransform tx;
-    private Rectangle hb;
-
+    
     int x, y;
     int width, height;
     double scaleWidth = 0.3;
     double scaleHeight = 0.3;
 
-    public Platform(int x, int y) {
+    public Scroll(int x, int y) {
         this.x = x;
         this.y = y;
 
-        img = getImage("/imgs/" + "platform.png");
+        img = getImage("");
 
-        width = 140;
+        width = 600;
         height = 20;
-        
-        hb = new Rectangle(x,y,width,height);
 
         tx = AffineTransform.getTranslateInstance(x, y);
         tx.scale(scaleWidth, scaleHeight);
@@ -46,7 +43,7 @@ public class Platform {
     private Image getImage(String path) {
         Image tempImage = null;
         try {
-            URL imageURL = Platform.class.getResource(path);
+            URL imageURL = Scroll.class.getResource(path);
             tempImage = Toolkit.getDefaultToolkit().getImage(imageURL);
         } catch (Exception e) {
             e.printStackTrace();
