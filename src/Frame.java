@@ -218,7 +218,6 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		        enemy.update();
 
 		        if (enemy.getBounds().intersects(new Rectangle(d.getX(), d.getY(), d.getWidth(), d.getHeight()))) {
-		            // Collision! Do something like reset game or reduce health
 		            System.out.println("Hit by enemy!");
 		        }
 
@@ -235,7 +234,6 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 
 		            if (bulletRect.intersects(playerRect)) {
 		                System.out.println("Player hit by bullet!");
-		                // You can reset the game, reduce lives, etc.
 		            }
 		        }
 		    }
