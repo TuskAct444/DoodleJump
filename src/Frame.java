@@ -3,16 +3,20 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
+import java.util.Random;
 
 import javax.swing.Timer;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import java.util.Iterator;
 
 public class Frame extends JPanel implements ActionListener, MouseListener, KeyListener{
 	
@@ -23,10 +27,16 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	// resolution of the frame	
 
     MovingPlatform mP = new MovingPlatform(100, 300, 3);
-    MC d = new MC(230 , 150);
+    MC d = new MC(130 , 750);
     Platform p = new Platform(200, 600);
-
+    BrokenPlatform bP = new BrokenPlatform(360, 430);
     Background b = new Background(0, 0);
+    ArrayList<HornetEnemy> enemies = new ArrayList<>();
+    Random rand = new Random();
+    int enemySpawnTimer = 0;
+    PowerUp power = new PowerUp(250, 400); 
+    FloatPowerUp floatPower = new FloatPowerUp(300, 500);
+
 	int gravity = 5;
 
     static int width 		= 600;
@@ -63,11 +73,39 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		
 		b.paint(g);
 
-		
+		power.paint(g);
+		floatPower.paint(g);
+
 		mP.paint(g);
 		p.paint(g);
+		bP.paint(g);
 		
+		super.paintComponent(g);
+		g.setFont(myFont);
+		g.setColor(Color.white);
 		
+		// BG
+		b.paint(g);
+		// Platform
+		p.paint(g);
+		g.drawRect(p.getX(), p.getX(), p.getWidth(), p.getHeight());
+		// Moving Platform
+		mP.paint(g);
+		g.drawRect(mP.getX(), mP.getX(), mP.getWidth(), mP.getHeight());
+		// Character
+		d.paint(g);
+		d.updateVy();
+		g.drawRect(d.getX(), d.getY(), d.getWidth(), d.getHeight());
+		
+		// Scoring system
+		s.paint(g);
+		g.drawRect(s.getX(), s.getY(), s.getWidth(), s.getHeight());
+		
+		// Character collision
+		if(p.collides(d) || mP.collided(d)) {
+			d.setVy(-7.5);
+			d.incCol(1);
+		}
 		
 		
 		
@@ -75,7 +113,10 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		if(d.getY()>800) {
 			d.setVy(-27);
 		}
-		
+		for (HornetEnemy enemy : enemies) {
+		    enemy.paint(g);
+		}
+
 	}
 
 	
@@ -160,9 +201,64 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		        d.setY(mP.y - d.getHeight());
 		        d.setVy(-27); // bounce
 		    }
+		    enemySpawnTimer++;
+		    if (enemySpawnTimer > 1000) {
+		        int side = rand.nextInt(2); // 0 = left, 1 = right
+		        int x = (side == 0) ? 0 : Frame.width - 50;
+		        int y = rand.nextInt(Frame.height - 200);
+		        enemies.add(new HornetEnemy(x, y));
+		        enemySpawnTimer = 0;
+		    }
+
+
+		    // Update & remove off-screen enemies
+		    Iterator<HornetEnemy> iterator = enemies.iterator();
+		    while (iterator.hasNext()) {
+		        HornetEnemy enemy = iterator.next();
+		        enemy.update();
+
+		        if (enemy.getBounds().intersects(new Rectangle(d.getX(), d.getY(), d.getWidth(), d.getHeight()))) {
+		            // Collision! Do something like reset game or reduce health
+		            System.out.println("Hit by enemy!");
+		        }
+
+		        // Remove enemies that go off screen
+		        if (enemy.y < -100 || enemy.y > Frame.height + 100) {
+		            iterator.remove();
+		        }
+
+		    }
+		    for (HornetEnemy enemy : enemies) {
+		        for (Bullet bullet : enemy.getBullets()) {
+		            Rectangle bulletRect = bullet.getBounds();
+		            Rectangle playerRect = new Rectangle(d.getX(), d.getY(), d.getWidth(), d.getHeight());
+
+		            if (bulletRect.intersects(playerRect)) {
+		                System.out.println("Player hit by bullet!");
+		                // You can reset the game, reduce lives, etc.
+		            }
+		        }
+		    }
+
+		    if (power.collidesWith(d)) {
+		        d.activateBoost();
+		    }
+		    if (p.collided(d) && d.getVy() >= 0) {
+		        d.setY(p.y - d.getHeight());
+		        d.setVy(d.getBounceStrength());
+		    } else if (mP.collidesWith(d) && d.getVy() >= 0) {
+		        d.setY(mP.y - d.getHeight());
+		        d.setVy(d.getBounceStrength());
+		    }
+		    if (floatPower.collidesWith(d)) {
+		        d.activateFloat();
+		    }
+
+		 
 
 		    repaint();
 		}
+
 		// TODO Auto-generated method stub
 		
 	

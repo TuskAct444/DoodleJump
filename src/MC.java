@@ -24,6 +24,15 @@ public class MC{
     int maxSpeed = 10;
     int Acceleration = 1;
     double grav;
+    private boolean hasBoost = false;
+    private long boostStartTime = 0;
+    private int normalBounce = -27;
+    private int boostedBounce = -40;
+    private int boostDuration = 5000; // milliseconds
+    private boolean isFloating = false;
+    private long floatStartTime = 0;
+    private int floatDuration = 4000; // 4 seconds
+    private double floatSpeed = -3;   // gentle upward speed
 
 	//change to scale image
 	
@@ -115,12 +124,42 @@ public class MC{
 	    } else if (x < -50) {
 	        x = Frame.width; // Appears on the right
 	    }
+	    if (isFloating) {
+	        // Cancel gravity, float upward
+	        vy = (int) floatSpeed;
+
+	        // Stop floating after duration
+	        if (System.currentTimeMillis() - floatStartTime > floatDuration) {
+	            isFloating = false;
+	        }
+	    } else {
+
 	    vy += 1; // gravity force
+	    }
 	    y += vy;
 
 	}
 
-	
+	public void activateBoost() {
+	    hasBoost = true;
+	    boostStartTime = System.currentTimeMillis();
+	}
+	public void activateFloat() {
+	    isFloating = true;
+	    floatStartTime = System.currentTimeMillis();
+	}
+
+	public int getBounceStrength() {
+	    if (hasBoost) {
+	        if (System.currentTimeMillis() - boostStartTime > boostDuration) {
+	            hasBoost = false;
+	            return normalBounce;
+	        }
+	        return boostedBounce;
+	    }
+	    return normalBounce;
+	}
+
 	private void init(double a, double b) {
 		tx.setToTranslation(a, b);
 		tx.scale(scaleWidth, scaleHeight);
@@ -249,6 +288,12 @@ public class MC{
 			e.printStackTrace();
 		}
 		return tempImage;
+	}
+
+
+	public void updateVy() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }
