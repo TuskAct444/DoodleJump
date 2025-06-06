@@ -211,22 +211,23 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		    }
 
 
-		    // Update & remove off-screen enemies
-		    Iterator<HornetEnemy> iterator = enemies.iterator();
-		    while (iterator.hasNext()) {
-		        HornetEnemy enemy = iterator.next();
-		        enemy.update();
+ // Iterate through all HornetEnemy objects in the enemies list
+Iterator<HornetEnemy> iterator = enemies.iterator();
+while (iterator.hasNext()) {
+    HornetEnemy enemy = iterator.next(); // Get the next enemy from the iterator
+    enemy.update(); // Update the enemy's position or behavior
 
-		        if (enemy.getBounds().intersects(new Rectangle(d.getX(), d.getY(), d.getWidth(), d.getHeight()))) {
-		            System.out.println("Uh oh! You've been hit!");
-		        }
+    // Check if the enemy collides with the player (represented by 'd')
+    if (enemy.getBounds().intersects(new Rectangle(d.getX(), d.getY(), d.getWidth(), d.getHeight()))) {
+        System.out.println("Uh oh! You've been hit!"); //  message if collision is detected
+    }
 
-		        // Remove enemies that go off screen
-		        if (enemy.y < -100 || enemy.y > Frame.height + 100) {
-		            iterator.remove();
-		        }
+    // Remove the enemy if it has moved far off the screen (above or below)
+    if (enemy.y < -100 || enemy.y > Frame.height + 100) {
+        iterator.remove(); // Safely remove the enemy from the list using the iterator
+    }
+}
 
-		    }
 		    for (HornetEnemy enemy : enemies) {
 		        for (Bullet bullet : enemy.getBullets()) {
 		            Rectangle bulletRect = bullet.getBounds();
@@ -238,19 +239,27 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		        }
 		    }
 
-		    if (power.collidesWith(d)) {
-		        d.activateBoost();
-		    }
-		    if (p.collided(d) && d.getVy() >= 0) {
-		        d.setY(p.y - d.getHeight());
-		        d.setVy(d.getBounceStrength());
-		    } else if (mP.collidesWith(d) && d.getVy() >= 0) {
-		        d.setY(mP.y - d.getHeight());
-		        d.setVy(d.getBounceStrength());
-		    }
-		    if (floatPower.collidesWith(d)) {
-		        d.activateFloat();
-		    }
+ // Check if the MC collides with a power-up
+if (power.collidesWith(d)) {
+    d.activateBoost(); // Activates jump boost
+}
+
+// Check if the MC collides with a normal platform  while falling downwards
+if (p.collided(d) && d.getVy() >= 0) {
+    d.setY(p.y - d.getHeight()); // Position the player on top of the platform
+    d.setVy(d.getBounceStrength()); // Make the player bounce upward
+} 
+// Check if the MC collides with the moving platform while falling
+else if (mP.collidesWith(d) && d.getVy() >= 0) {
+    d.setY(mP.y - d.getHeight()); // Position the player on top of the moving platform
+    d.setVy(d.getBounceStrength()); // Make the player bounce upward
+}
+
+// Check if the player collides with a floating power-up
+if (floatPower.collidesWith(d)) {
+    d.activateFloat(); // Activate float power up
+}
+
 
 		 
 
