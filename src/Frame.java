@@ -218,7 +218,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		        enemy.update();
 
 		        if (enemy.getBounds().intersects(new Rectangle(d.getX(), d.getY(), d.getWidth(), d.getHeight()))) {
-		            System.out.println("Hit by enemy!");
+		            System.out.println("Uh oh! You've been hit!");
 		        }
 
 		        // Remove enemies that go off screen
