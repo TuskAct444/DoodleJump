@@ -17,6 +17,8 @@ public class MC{
 	double grav;					//gravity :)
 	double accel;
 	double maxS;
+
+
 	int col;
 	double scaleWidth = 0.3;		//change to scale image
 	double scaleHeight = 0.3; 		//change to scale image

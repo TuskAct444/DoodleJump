@@ -28,7 +28,8 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	boolean right = false;
 	int score = 0;
 	Font myFont = new Font("Courier", Font.BOLD, 25);
-	int maxP = 20;
+	int maxP = 20; // max platform
+	int maxPow = 1; // max pow
 	
 	// resolution of the frame	
 	static int width 		= 600;
@@ -42,8 +43,8 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
     Scroll s = new Scroll(0, 300);
     
     ArrayList<Platform> plat = new ArrayList<>();
-    ArrayList<MovingPlatform> mP = new ArrayList<>();
-	
+    ArrayList<Powerup> pow = new ArrayList<>();
+
 	public Frame() {
 		
 		JFrame frame = new JFrame("Doodle Jump");
@@ -65,6 +66,11 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		int spacingY = 150;
 		int startY = 700;
 		
+		
+		// GENERATE INITIAL PLATFORMS
+		
+		// Initial platforms are all static
+		
 		while(plat.size() < maxP) {
 			
 			int rX = (int)(Math.random()*450);
@@ -76,24 +82,88 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 				int y = p.getY();
 				int x = p.getX();
 				
+				// if platforms are too close together
+				
 				if((Math.abs(rY-y)) < 150 && (Math.abs(rX-x) < 150)){
 					tooClose = true;
 					break;
 				}
 			}
 			
-			if(!tooClose	) {
+			// if not too close
+			if(!tooClose) {
 				plat.add(new Platform(rX, rY, false, false, false));
 			}
 			
 		}
 		
+		while(pow.size() < maxPow) {
+			
+			int rX = (int)(Math.random()*450);
+			int rY = (int)(Math.random()*800);
+			
+			boolean tooClose = false;
+			
+			for(Powerup p: pow) {
+				int y = p.getY();
+				int x = p.getX();
+				
+				// if platforms are too close together
+				
+				if((Math.abs(rY-y)) < 200 && (Math.abs(rX-x) < 200)){
+					tooClose = true;
+					break;
+				}
+			}
+			
+			Double rand = Math.random();
+			
+			// if not too close
+			if(!tooClose && rand < 0.2) {
+				pow.add(new Powerup(rX, rY, "None"));
+			}
+			
+		}	
+		
 	}
 	
-	// FINISH THIS
+	public void updatePowerup() {
+		ArrayList<Powerup> toRemove = new ArrayList<>();
+	    // add out of bound powerups to a remove list
+	    for (Powerup p : pow) {
+	        if (p.getY() > 1200) {
+	            toRemove.add(p);
+	        }
+	    }
+	    pow.removeAll(toRemove);
+	    
+	    // generate platforms 'infinitely' as long as there is less than maxP
+	    while (pow.size() < maxPow) {
+	        int rX = (int)(Math.random() * (width - 80));
+	        int rY = (int)(Math.random() * (height - 80));
+
+	        boolean tooClose = false;
+	        for (Powerup p : pow) {
+	            if (Math.abs(rX - p.getX()) < 200 && Math.abs(rY - p.getY()) < 200) {
+	                tooClose = true;
+	                break;
+	            }
+	        }
+	        double rand = Math.random();
+
+	        if(!tooClose) {
+	        	if(rand < 0.05) {
+	        		pow.add(new Powerup(rX, rY, "Rocket"));
+	        	} else {
+	        		pow.add(new Powerup(rX, rY, "none"));
+	        	}
+	        } 
+	    }
+	}
 	
 	public void updatePlatforms() {
 	    ArrayList<Platform> toRemove = new ArrayList<>();
+	    // add out of bound platforms to a remove list
 	    for (Platform p : plat) {
 	        if (p.getY() > height) {
 	            toRemove.add(p);
@@ -101,6 +171,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	    }
 	    plat.removeAll(toRemove);
 	    
+	    // generate platforms 'infinitely' as long as there is less than maxP
 	    while (plat.size() < maxP) {
 	    	int spacingY = 125;
 			int startY = 700;
@@ -125,7 +196,9 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		    	    int rescueY = rY - 100;
 
 		    	    plat.add(new Platform(rescueX, rescueY, false, false, false));
-	        	} else if(rand < 0.2) {
+	        	} else if(rand < 0.1) {
+	        		plat.add(new Platform(rX, rY, true, false, true));
+	        	}else if(rand < 0.15) {
 	        		plat.add(new Platform(rX, rY, false, false, true));
 		        } else if(rand < 0.3){
 		        	plat.add(new Platform(rX, rY, true, false, false));
@@ -151,6 +224,8 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		g.setFont(myFont);
 		g.setColor(Color.black);
 		
+		
+		
 		// BG
 		b.paint(g);
 		b2.paint(g);
@@ -165,6 +240,28 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		
 		// Character collision
 		
+		System.out.println(pow.size());
+		
+		for(Powerup p : pow) {
+			p.updateVy();
+			if(p != null) {
+				p.paint(g);
+			}
+			if(p.collides(d)) {
+				if(p.getType().equals("Rocket")) {
+					 if (p.getType().equals("Rocket")) {
+						 d.setVy(-40);
+					 }
+				}
+			}
+			
+			if(d.getY() <= s.getY()) {
+				p.setVy(Math.abs(d.getVy()));
+			} else {
+			    p.setVy(0);
+			}
+		}
+		
 		for(Platform p : plat) {
 			p.updateVy();
 			p.paint(g);
@@ -174,7 +271,6 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 					d.setVy(-16);
 					d.incCol(1);
 				 } else if(p.isBroken()) {
-					d.setVy(-6);
 					d.incCol(1);
 					p.setVy(10);
 					p.hasBeenUsed = true;
@@ -291,6 +387,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		
 		d.updateVx();
 		updatePlatforms();
+		updatePowerup();
 	    repaint();
 	}
 		// TODO Auto-generated method stub

@@ -1,3 +1,4 @@
+
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -6,46 +7,46 @@ import java.awt.Toolkit;
 import java.awt.geom.AffineTransform;
 import java.net.URL;
 
-public class MovingPlatform {
+public class Powerup {
     private Image img;
     private AffineTransform tx;
-
+    
     int x, y;
-    double vx;
     double vy;
     int width, height;
+    String type;
     double scaleWidth = 0.3;
     double scaleHeight = 0.3;
 
-    public MovingPlatform(int x, int y, int speed) {
+    public Powerup(int x, int y, String type) {
         this.x = x;
         this.y = y;
-        this.vx = speed;
-        vy = 0;
+        this.type = type;
+        if(type.equals("none")) {
+        	img = null;
+        } else if(type.equals("Rocket")){
+            img = getImage("/imgs/" + "powerup.png");
+        }
 
-        img = getImage("/imgs/" + "platform.png");
-
-        width = 140;
-        height = 20;
-
+        width = 40;
+        height = 40;
 
         tx = AffineTransform.getTranslateInstance(x, y);
         tx.scale(scaleWidth, scaleHeight);
     }
 
-    public void paint(Graphics g) {
+    public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public void paint(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
-        move();
-        y += vy;
         init(x, y);
         g2.drawImage(img, tx, null);
-    }
-
-    private void move() {
-        x += vx;
-        if (x <= 0 || x + width >= Frame.width) {
-            vx = -vx;
-        }
     }
 
     private void init(double a, double b) {
@@ -56,40 +57,13 @@ public class MovingPlatform {
     private Image getImage(String path) {
         Image tempImage = null;
         try {
-            URL imageURL = MovingPlatform.class.getResource(path);
+            URL imageURL = Powerup.class.getResource(path);
             tempImage = Toolkit.getDefaultToolkit().getImage(imageURL);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return tempImage;
     }
-
-    public boolean collided(MC mc) {
-		
-		// represents each object as a rectangle
-		
-		Rectangle rectTemp = new Rectangle(
-				
-				mc.getX(),
-				mc.getY(),
-				mc.getWidth(),
-				mc.getHeight()
-				
-				);
-		
-		// represent object queried for info as a rectangle
-		Rectangle rowHitbox = new Rectangle(
-				
-				this.x,
-				this.y,
-				this.width,
-				this.height
-
-				);
-		
-		return rectTemp.intersects(rowHitbox);
-		
-	}
     
     public int getWidth() {
 		return width;
@@ -123,15 +97,7 @@ public class MovingPlatform {
 		this.y = y;
 	}
 
-	public double getVx() {
-		return vx;
-	}
-
-	public void setVx(double vx) {
-		this.vx = vx;
-	}
-
-	public double getVy() {
+    public double getVy() {
 		return vy;
 	}
 
@@ -139,7 +105,37 @@ public class MovingPlatform {
 		this.vy = vy;
 	}
 
+	public boolean collides(MC d) {
+		
+		// represents each object as a rectangle
+		
+		Rectangle rectTemp = new Rectangle(
+				
+				d.getX(),
+				d.getY(),
+				d.getWidth(),
+				d.getHeight()
+				
+				);
+		
+		// represent object queried for info as a rectangle
+		Rectangle rowHitbox = new Rectangle(
+				
+				this.x,
+				this.y,
+				this.width,
+				this.height
+
+				);
+		
+		return (rectTemp.intersects(rowHitbox));
+		
+	}
+    
+    public void updateVy(){
+    	y += vy;
+    }
+ 
 }
-
-
+			
 

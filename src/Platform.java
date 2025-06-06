@@ -39,6 +39,10 @@ public class Platform {
         	vx = 0;
         }
         
+        if(isSpring && move) {
+        	img = getImage("/imgs/" + "mspring.png");
+        }
+        
         this.broken = broken;
         this.s = isSpring;
         
