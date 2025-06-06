@@ -134,7 +134,7 @@ public class MC{
 	
 	public void updateVy() {
 		// col == 0 = fail
-		if(this.y>800) {
+		if(this.y>800 && col == 0) {
 			setVy(-7.5);
 		}
 		vy += grav;

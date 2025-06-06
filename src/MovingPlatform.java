@@ -12,6 +12,7 @@ public class MovingPlatform {
 
     int x, y;
     double vx;
+    double vy;
     int width, height;
     double scaleWidth = 0.3;
     double scaleHeight = 0.3;
@@ -20,6 +21,7 @@ public class MovingPlatform {
         this.x = x;
         this.y = y;
         this.vx = speed;
+        vy = 0;
 
         img = getImage("/imgs/" + "platform.png");
 
@@ -34,6 +36,7 @@ public class MovingPlatform {
     public void paint(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
         move();
+        y += vy;
         init(x, y);
         g2.drawImage(img, tx, null);
     }
@@ -126,6 +129,14 @@ public class MovingPlatform {
 
 	public void setVx(double vx) {
 		this.vx = vx;
+	}
+
+	public double getVy() {
+		return vy;
+	}
+
+	public void setVy(double vy) {
+		this.vy = vy;
 	}
 
 }

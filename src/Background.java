@@ -11,7 +11,8 @@ public class Background {
 	
 	int width, height;
 	int x, y;						//position of the object
-	int vx, vy;						//movement variables
+	int vx; 
+	double vy;						//movement variables
 	double scaleWidth = 4.0;		//change to scale image
 	double scaleHeight = 4.0; 		//change to scale image
 	
@@ -41,6 +42,66 @@ public class Background {
 	}
 	
 	
+	public int getWidth() {
+		return width;
+	}
+
+
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
+
+	public int getHeight() {
+		return height;
+	}
+
+
+	public void setHeight(int height) {
+		this.height = height;
+	}
+
+
+	public int getX() {
+		return x;
+	}
+
+
+	public void setX(int x) {
+		this.x = x;
+	}
+
+
+	public int getY() {
+		return y;
+	}
+
+
+	public void setY(int y) {
+		this.y = y;
+	}
+
+
+	public int getVx() {
+		return vx;
+	}
+
+
+	public void setVx(int vx) {
+		this.vx = vx;
+	}
+
+
+	public double getVy() {
+		return vy;
+	}
+
+
+	public void setVy(double d) {
+		this.vy = d;
+	}
+
+
 	public Background(int x, int y) {
 		
 		this(); // invoke default constructor so it isn't copy pasted code

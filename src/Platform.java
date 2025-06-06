@@ -14,16 +14,19 @@ public class Platform {
 
     int x, y;
     int width, height;
+    double vy;
     double scaleWidth = 0.3;
     double scaleHeight = 0.3;
 
     public Platform(int x, int y) {
         this.x = x;
         this.y = y;
+        vy = 0;
 
         img = getImage("/imgs/" + "platform.png");
 
         width = 140;
+        vy = 0;
         height = 20;
         
         hb = new Rectangle(x,y,width,height);
@@ -34,6 +37,7 @@ public class Platform {
 
     public void paint(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
+        y += vy;
         init(x, y);
         g2.drawImage(img, tx, null);
     }
@@ -111,6 +115,20 @@ public class Platform {
 		
 		return (rectTemp.intersects(rowHitbox));
 		
+	}
+
+	public void setVy(double abs) {
+		// TODO Auto-generated method stub
+		this.vy = abs;
+	}
+	
+	public double getVy() {
+		// TODO Auto-generated method stub
+		return vy;
+	}
+	
+	public void updateVy() {
+		y += vy;
 	}
  
 }
