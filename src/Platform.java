@@ -27,9 +27,13 @@ public class Platform {
         this.y = y;
         this.move = move;
         vy = 0;
-        if(move = true) {
+        if(move == true) {
         	vx = 2;
-            img = getImage("/imgs/" + "platform.png");
+            img = getImage("/imgs/" + "moving.png");
+        } else if(broken == true){
+        	img = getImage("/imgs/" + "broken.png");
+        } else if(isSpring == true) {
+        	img = getImage("/imgs/" + "spring.png");
         } else {
             img = getImage("/imgs/" + "platform.png");
         	vx = 0;
@@ -47,7 +51,15 @@ public class Platform {
         tx.scale(scaleWidth, scaleHeight);
     }
 
-    public boolean isBroken() {
+    public boolean isS() {
+		return s;
+	}
+
+	public void setS(boolean s) {
+		this.s = s;
+	}
+
+	public boolean isBroken() {
 		return broken;
 	}
 

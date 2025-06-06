@@ -36,7 +36,7 @@ public class MC{
 		vx = 0.0;
 		vy = 0.0;
 		
-		grav = 0.35;
+		grav = 0.2;
 		accel = 0.4;
 		
 		maxS = 6;
@@ -135,7 +135,7 @@ public class MC{
 	public void updateVy() {
 		// col == 0 = fail
 		if(this.y>800 && col == 0) {
-			setVy(-7.5);
+			setVy(-6);
 		}
 		vy += grav;
 		y += vy;

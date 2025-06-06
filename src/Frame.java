@@ -24,12 +24,11 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	long ellapseTime = 0;
 	Font timeFont = new Font("Courier", Font.BOLD, 70);
 	int level = 0;
-	int gravity = 1;
 	boolean left = false;
 	boolean right = false;
 	int score = 0;
 	Font myFont = new Font("Courier", Font.BOLD, 25);
-	int maxP = 10;
+	int maxP = 20;
 	
 	// resolution of the frame	
 	static int width 		= 600;
@@ -40,7 +39,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
     Background b = new Background(0, 0);
     Background b2 = new Background(0, -1450);
     MC d = new MC(300, 800);
-    Scroll s = new Scroll(0, 250);
+    Scroll s = new Scroll(0, 300);
     
     ArrayList<Platform> plat = new ArrayList<>();
     ArrayList<MovingPlatform> mP = new ArrayList<>();
@@ -77,18 +76,14 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 				int y = p.getY();
 				int x = p.getX();
 				
-				if((Math.abs(rY-y)) < 100 && (Math.abs(rX-x) < 150)){
+				if((Math.abs(rY-y)) < 150 && (Math.abs(rX-x) < 150)){
 					tooClose = true;
 					break;
 				}
 			}
 			
-			if(!tooClose && Math.random() < 0.6) {
+			if(!tooClose	) {
 				plat.add(new Platform(rX, rY, false, false, false));
-			} else if(!tooClose && Math.random() < 0.3){
-				plat.add(new Platform(rX, rY, true, false, false));
-			} else {
-        		plat.add(new Platform(rX, rY, false, true, false));
 			}
 			
 		}
@@ -99,7 +94,6 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	
 	public void updatePlatforms() {
 	    ArrayList<Platform> toRemove = new ArrayList<>();
-	    ArrayList<MovingPlatform> toRemoveM = new ArrayList<>();
 	    for (Platform p : plat) {
 	        if (p.getY() > height) {
 	            toRemove.add(p);
@@ -107,36 +101,37 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	    }
 	    plat.removeAll(toRemove);
 	    
-	    for (MovingPlatform p : mP) {
-	        if (p.getY() > height) {	
-	            toRemoveM.add(p);
-	        }
-	    }
-	    mP.removeAll(toRemoveM);
-
-	    double rand = Math.random();
-	    
 	    while (plat.size() < maxP) {
-	    	int spacingY = 150;
+	    	int spacingY = 125;
 			int startY = 700;
 	    	int highestY = findHighestPlatformY();
 	        int rX = (int)(Math.random() * (width - 150));
-	        int rY = startY - plat.size() * spacingY;
+	        int rY = highestY - spacingY;
 
 	        boolean tooClose = false;
 	        for (Platform p : plat) {
-	            if (Math.abs(rX - p.getX()) > 150 && Math.abs(rY - p.getY()) > 100) {
+	            if (Math.abs(rX - p.getX()) < 175 && Math.abs(rY - p.getY()) < 150) {
 	                tooClose = true;
 	                break;
 	            }
 	        }
 
-	        if (!tooClose && rY > -1000 && Math.random() < 0.75) {
-	            plat.add(new Platform(rX, rY, false, false, false));
-	        } else if(!tooClose && Math.random() < 0.3){
-	        	plat.add(new Platform(rX, rY, true, false, false));
-	        } else {
-	        	plat.add(new Platform(rX, rY, false, true, false));
+	        if(!tooClose) {
+		    	double rand = Math.random();
+	        	if(rand < 0.05) {
+		            plat.add(new Platform(rX, rY, false, true, false));
+		            
+		    	    int rescueX = Math.min(Math.max(rX + 100, 0), Frame.width - 100);
+		    	    int rescueY = rY - 100;
+
+		    	    plat.add(new Platform(rescueX, rescueY, false, false, false));
+	        	} else if(rand < 0.2) {
+	        		plat.add(new Platform(rX, rY, false, false, true));
+		        } else if(rand < 0.3){
+		        	plat.add(new Platform(rX, rY, true, false, false));
+		        } else {
+		        	plat.add(new Platform(rX, rY, false, false, false));
+		        }
 	        }
 	    }
 	}
@@ -154,7 +149,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	public void paint(Graphics g) {
 		super.paintComponent(g);
 		g.setFont(myFont);
-		g.setColor(Color.white);
+		g.setColor(Color.black);
 		
 		// BG
 		b.paint(g);
@@ -171,23 +166,32 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		// Character collision
 		
 		for(Platform p : plat) {
+			p.updateVy();
 			p.paint(g);
-			if(p.collides(d)) {
-				if(p.isBroken()) {
-					d.setVy(-8);
+			if(p.collides(d) && d.getVy() > 0 && !p.hasBeenUsed) {
+				
+				 if(p.isS()){
+					d.setVy(-16);
 					d.incCol(1);
-					p.setVy(3);
+				 } else if(p.isBroken()) {
+					d.setVy(-6);
+					d.incCol(1);
+					p.setVy(10);
 					p.hasBeenUsed = true;
 				} else {
-					d.setVy(-8);
+					d.setVy(-6);
 					d.incCol(1);
 				}
 			}
 			
 			if(d.getY() <= s.getY()) {
-				p.setVy(Math.abs(d.getVy()*2));
+				if(!p.hasBeenUsed) {
+					p.setVy(Math.abs(d.getVy()));
+				}
 			} else {
-				p.setVy(0);
+				if (!p.hasBeenUsed) {
+			        p.setVy(0);
+			    }
 			}
 			g.drawRect(p.getX(), p.getY(), p.getWidth(), p.getHeight());
 			
