@@ -40,7 +40,7 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
     Background b = new Background(0, 0);
     Background b2 = new Background(0, -1450);
     MC d = new MC(300, 800);
-    Scroll s = new Scroll(0, 300);
+    Scroll s = new Scroll(0, 250);
     
     ArrayList<Platform> plat = new ArrayList<>();
     ArrayList<MovingPlatform> mP = new ArrayList<>();
@@ -63,10 +63,13 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 	    Timer t = new Timer(8, this);
 		t.start(); 	
 		
+		int spacingY = 150;
+		int startY = 700;
+		
 		while(plat.size() < maxP) {
 			
 			int rX = (int)(Math.random()*450);
-			int rY = (int)(Math.random()*900);
+			int rY = startY - plat.size() * spacingY;
 			
 			boolean tooClose = false;
 			
@@ -74,45 +77,66 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 				int y = p.getY();
 				int x = p.getX();
 				
-				if((Math.abs(rY-y)) < 150 && (Math.abs(rX-x) < 150)){
+				if((Math.abs(rY-y)) < 100 && (Math.abs(rX-x) < 150)){
 					tooClose = true;
 					break;
 				}
 			}
 			
-			if(!tooClose) {
-				plat.add(new Platform(rX, rY));
+			if(!tooClose && Math.random() < 0.6) {
+				plat.add(new Platform(rX, rY, false, false, false));
+			} else if(!tooClose && Math.random() < 0.3){
+				plat.add(new Platform(rX, rY, true, false, false));
+			} else {
+        		plat.add(new Platform(rX, rY, false, true, false));
 			}
 			
 		}
 		
 	}
 	
+	// FINISH THIS
+	
 	public void updatePlatforms() {
 	    ArrayList<Platform> toRemove = new ArrayList<>();
+	    ArrayList<MovingPlatform> toRemoveM = new ArrayList<>();
 	    for (Platform p : plat) {
 	        if (p.getY() > height) {
 	            toRemove.add(p);
 	        }
 	    }
 	    plat.removeAll(toRemove);
+	    
+	    for (MovingPlatform p : mP) {
+	        if (p.getY() > height) {	
+	            toRemoveM.add(p);
+	        }
+	    }
+	    mP.removeAll(toRemoveM);
 
+	    double rand = Math.random();
 	    
 	    while (plat.size() < maxP) {
+	    	int spacingY = 150;
+			int startY = 700;
 	    	int highestY = findHighestPlatformY();
-	        int rX = (int)(Math.random() * (width - 100));
-	        int rY = highestY - (int)(Math.random() * 70 + 80);
+	        int rX = (int)(Math.random() * (width - 150));
+	        int rY = startY - plat.size() * spacingY;
 
 	        boolean tooClose = false;
 	        for (Platform p : plat) {
-	            if (Math.abs(rX - p.getX()) < 100 && Math.abs(rY - p.getY()) < 100) {
+	            if (Math.abs(rX - p.getX()) > 150 && Math.abs(rY - p.getY()) > 100) {
 	                tooClose = true;
 	                break;
 	            }
 	        }
 
-	        if (!tooClose && rY > -1000) {
-	            plat.add(new Platform(rX, rY));
+	        if (!tooClose && rY > -1000 && Math.random() < 0.75) {
+	            plat.add(new Platform(rX, rY, false, false, false));
+	        } else if(!tooClose && Math.random() < 0.3){
+	        	plat.add(new Platform(rX, rY, true, false, false));
+	        } else {
+	        	plat.add(new Platform(rX, rY, false, true, false));
 	        }
 	    }
 	}
@@ -149,24 +173,15 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		for(Platform p : plat) {
 			p.paint(g);
 			if(p.collides(d)) {
-				d.setVy(-7.5);
-				d.incCol(1);
-			}
-			
-			if(d.getY() <= s.getY()) {
-				p.setVy(Math.abs(d.getVy()*2));
-			} else {
-				p.setVy(0);
-			}
-			g.drawRect(p.getX(), p.getY(), p.getWidth(), p.getHeight());
-			
-		}
-		
-		for(MovingPlatform p : mP) {
-			p.paint(g);
-			if(p.collided(d)) {
-				d.setVy(-7.5);
-				d.incCol(1);
+				if(p.isBroken()) {
+					d.setVy(-8);
+					d.incCol(1);
+					p.setVy(3);
+					p.hasBeenUsed = true;
+				} else {
+					d.setVy(-8);
+					d.incCol(1);
+				}
 			}
 			
 			if(d.getY() <= s.getY()) {
@@ -179,8 +194,8 @@ public class Frame extends JPanel implements ActionListener, MouseListener, KeyL
 		}
 		
 		if(d.getY() <= s.getY()) {
-			b.setVy(Math.abs(d.getVy()*2));
-			b2.setVy(Math.abs(d.getVy()*2));
+			b.setVy(Math.abs(d.getVy()));
+			b2.setVy(Math.abs(d.getVy()));
 			d.setY(s.getY());
 			
 			score += Math.abs(d.getVy());

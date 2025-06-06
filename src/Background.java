@@ -17,7 +17,7 @@ public class Background {
 	double scaleHeight = 4.0; 		//change to scale image
 	
 	public Background() {
-		forward		= getImage("/imgs/" + "Clouds.jpg");
+		forward		= getImage("/imgs/" + "bg.png");
 		
 		
 		

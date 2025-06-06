@@ -14,19 +14,31 @@ public class Platform {
 
     int x, y;
     int width, height;
+    int vx;
     double vy;
+    boolean move, broken;
+    boolean hasBeenUsed = false;
+    boolean s;
     double scaleWidth = 0.3;
     double scaleHeight = 0.3;
 
-    public Platform(int x, int y) {
+    public Platform(int x, int y, boolean move, boolean broken, boolean isSpring) {
         this.x = x;
         this.y = y;
+        this.move = move;
         vy = 0;
-
-        img = getImage("/imgs/" + "platform.png");
-
+        if(move = true) {
+        	vx = 2;
+            img = getImage("/imgs/" + "platform.png");
+        } else {
+            img = getImage("/imgs/" + "platform.png");
+        	vx = 0;
+        }
+        
+        this.broken = broken;
+        this.s = isSpring;
+        
         width = 140;
-        vy = 0;
         height = 20;
         
         hb = new Rectangle(x,y,width,height);
@@ -35,11 +47,29 @@ public class Platform {
         tx.scale(scaleWidth, scaleHeight);
     }
 
-    public void paint(Graphics g) {
+    public boolean isBroken() {
+		return broken;
+	}
+
+	public void setBroken(boolean broken) {
+		this.broken = broken;
+	}
+
+	public void paint(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
         y += vy;
+        if(move) {
+        	move();
+        }
         init(x, y);
         g2.drawImage(img, tx, null);
+    }
+    
+    private void move() {
+        x += vx;
+        if (x <= 0 || x + width >= Frame.width) {
+            vx = -vx;
+        }
     }
 
     private void init(double a, double b) {
@@ -78,6 +108,14 @@ public class Platform {
 		return x;
 	}
 
+	public boolean isMove() {
+		return move;
+	}
+
+	public void setMove(boolean move) {
+		this.move = move;
+	}
+
 	public void setX(int x) {
 		this.x = x;
 	}
@@ -89,6 +127,8 @@ public class Platform {
 	public void setY(int y) {
 		this.y = y;
 	}
+	
+	
 
     public boolean collides(MC d) {
 		

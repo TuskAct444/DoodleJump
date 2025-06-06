@@ -37,7 +37,7 @@ public class MC{
 		vy = 0.0;
 		
 		grav = 0.35;
-		accel = 0.3;
+		accel = 0.4;
 		
 		maxS = 6;
 		
